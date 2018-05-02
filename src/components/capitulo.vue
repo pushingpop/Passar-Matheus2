@@ -238,7 +238,13 @@ export default {
     },
 
     checkForm(e){
-      if(this.form.name && this.form.titulo && this.form.cidade && this.form.editora && this.form.ano && this.form.autorCap
+      for (var i = 0; i < this.form.name.length; i++) {
+        if(this.form.name[i] == '' && this.form.name.length > 1){
+          alert("Favor preencher todos os campos de autores");
+          return;
+        }
+      }
+      if(this.form.name != '' && this.form.name != 'undefined' && this.form.titulo && this.form.cidade && this.form.editora && this.form.ano && this.form.autorCap
         && this.form.tituloCap && this.form.inicialCap && this.form.finalCap && this.form.numeroCap){
         if(this.form.link){
           if(this.form.acesso){
@@ -254,6 +260,7 @@ export default {
 
       }
       if(!this.form.name) alert("Favor preencher o nome do Autor:")
+      if(this.form.name == '') alert("Favor preencher o nome do Autor:")
       if(!this.form.titulo) alert("Favor preencher o Titulo:")
       if(!this.form.cidade) alert("Favor preencher a Cidade:")
       if(!this.form.editora) alert("Favor preencher a Editora:")
@@ -378,7 +385,7 @@ export default {
       console.log(tempID);
       document.getElementById('autor'+tempID).insertAdjacentHTML('afterend', '<br><input v-model="form.name" class="input" id="autor'+ this.autorID+ '"' + 'type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">');
       */
-      this.form.name.push("Teste");
+      this.form.name.push("");
     },
 
     changeQntCap(){
@@ -390,7 +397,7 @@ export default {
       console.log(tempcapID);
       //document.getElementById('autorCap'+tempcapID).insertAdjacentHTML('afterend', '<br><input v-model="form.autorCap" class="input" id="autorCap'+ this.capID+ '"' + 'type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">');
       */
-      this.form.autorCap.push("Teste");
+      this.form.autorCap.push("");
       console.log(this.form.autorCap);
     },
 
@@ -486,7 +493,6 @@ export default {
           }else {
             this.output += ".et al. ";
           }
-
         }
 
         if(this.form.subtituloCap == ''){

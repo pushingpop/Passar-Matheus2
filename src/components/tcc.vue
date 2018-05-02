@@ -14,12 +14,6 @@
     </div>
 
     <div class="control">
-      <input type="radio" v-model="form.codigo" value="3">
-      DOI:
-      <input v-model="form.doi" class="input" type="text" placeholder="Ex: XXXXXXSsdswd">
-    </div>
-
-    <div class="control">
       <label class="req">Autor(es): </label>
       <div v-for = "(nome, index) in form.name">
         <input v-model="form.name[index]" class="input" id="autor1" type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">
@@ -28,23 +22,8 @@
       <button type="button" name="Adicionar" v-on:click="changeQnt()">Adicionar</button>
     </div>
 
-    <div class="control req">
-      <label class="req">Nome do Períodico: </label>
-      <input v-model="form.nomePeriodico" class="input" type="text" placeholder="Ex: Catalogação e descrição bibliográfica">
-    </div>
-
-    <div class="control req">
-      Nº:
-      <input v-model="form.numero" class="input" type="text" placeholder="Ex: 1">
-    </div>
-
-    <div class="control req">
-      Ano Publicação:
-      <input v-model="form.ano" class="input" type="text" placeholder="Ex: 2018">
-    </div>
-
     <div class="control">
-      <label class="req">Título do trabalho: </label>
+      <label class="req">Título: </label>
       <input v-model="form.titulo" class="input" type="text" placeholder="Ex: Catalogação e descrição bibliográfica">
     </div>
 
@@ -54,18 +33,65 @@
     </div>
 
     <div class="control req">
+      <label class="req">Cidade </label>
+      <input v-model="form.cidade" class="input" type="text" placeholder="Ex: Catalogação e descrição bibliográfica">
+    </div>
+
+    <div class="control req">
+      Ano:
+      <input v-model="form.ano" class="input" type="text" placeholder="Ex: 2018">
+    </div>
+
+    <div class="control">
+      Sigla da Instituição:
+      <input v-model="form.siglaInst" class="input" type="text" placeholder="Ex: 2018">
+    </div>
+
+    <div class="control req">
+      Instituição:
+      <input v-model="form.inst" class="input" type="text" placeholder="Ex: 2018">
+    </div>
+
+    <div class="control req">
+      <label class="req">Ano Depósito: </label>
+      <input v-model="form.anoDeposito" class="input" type="text" placeholder="Ex: Catalogação e descrição bibliográfica">
+    </div>
+
+    <div class="control req">
+      Curso:
+      <input v-model="form.curso" class="input" type="text" placeholder="Ex: 1">
+    </div>
+
+    <div class="control">
+      Departamento:
+      <input v-model="form.departamento" class="input" type="text" placeholder="Ex: 48">
+    </div>
+
+    <div class="" v-on:change="tipoPessoa()">
+      Tipo autor:
+      <input type="radio" value="1" v-model="form.tipoDocumento">
+      <label for="one">Tese</label>
+      <input type="radio" value="2" v-model="form.tipoDocumento">
+      <label for="one">Dissertação</label>
+      <input type="radio" value="3" v-model="form.tipoDocumento">
+      <label for="one">Monografia</label>
+      <input type="radio" value="4" v-model="form.tipoDocumento">
+      <label for="one">Tcc</label>
+    </div>
+
+    <div class="control req">
       Nº Volumes:
-      <input v-model="form.nVolumes" class="input" type="text" placeholder="Ex: 48">
+      <input v-model="form.nVolumes" class="input" type="text" placeholder="Ex: contribuições a uma teoria">
     </div>
 
     <div class="control">
-      Página Inicial do Capítulo:
-      <input v-model="form.inicialCap" class="input" type="text" placeholder="Ex: contribuições a uma teoria">
+      Nº Capítulos:
+      <input v-model="form.numeroCap" class="input" type="text" placeholder="Ex: contribuições a uma teoria">
     </div>
 
-    <div class="control">
-      Página Final do Capítulo:
-      <input v-model="form.finalCap" class="input" type="text" placeholder="Ex: contribuições a uma teoria">
+    <div class="control req">
+      Nº páginas:
+      <input v-model="form.numeroCap" class="input" type="text" placeholder="Ex: contribuições a uma teoria">
     </div>
 
     <div class="control">
@@ -124,7 +150,13 @@ export default {
         vinculoCap: 'Sururu',
         doi: '19081098',
         nomePeriodico: 'nomePeriodico',
-        nVolumes: 'nVolumes'
+        nVolumes: 'nVolumes',
+        siglaInst: 'IFAL',
+        inst: 'Iffff',
+        anoDeposito: '2016',
+        curso: 'Sistemas de informação',
+        departamento: 'AB',
+        tipoDocumento: '1'
       }
     }
   },
@@ -177,9 +209,23 @@ export default {
     },
 
     envio(){
+      if(this.form.tipoDocumento == 1) this.form.tipoDocumento = 'Doutorado';
+      if(this.form.tipoDocumento == 2) this.form.tipoDocumento = 'Mestrado';
+      if(this.form.tipoDocumento == 3) this.form.tipoDocumento = 'Especialização';
+      if(this.form.tipoDocumento == 4) this.form.tipoDocumento = 'Graduação';
+
       this.output = '';
-      this.qntNomes();
-      this.chamarDados();
+
+      if(this.form.name.length > 3){
+        this.output = this.form.name[0] + " .et al. ";
+                this.chamarDados();
+      }else {
+        this.qntNomes();
+        this.chamarDados();
+      }
+
+      //this.qntNomes();
+      //this.chamarDados();
 /*
         if(this.form.tipoCap == 'juridica'){
           if(this.form.autorCap.length <= 3){
@@ -279,6 +325,7 @@ export default {
       console.log(this.form.autorCap);
     },
 
+
       chamarDados(){
         if(this.form.subtitulo != ''){
           this.output += this.form.titulo;
@@ -286,105 +333,56 @@ export default {
         }else{
           this.output += this.form.titulo +". ";
         }
-        if(this.form.nomePeriodico != ''){
-          this.output += this.form.nomePeriodico + ", ";
+        if(this.form.ano != ''){
+          this.output += this.form.ano + ", ";
         }
         if(this.form.volume != ''){
-          this.output += "v. " + this.form.volume + ", ";
+          this.output += this.form.volume + "v. ";
         }
         if(this.form.numero != ''){
-          this.output += "n. " + this.form.numero + ", ";
+          this.output += this.form.numero + "p. ";
         }
-        if(this.form.inicialCap != ''){
-          this.output += "p. " + this.form.inicialCap + "-" + this.form.finalCap + ", ";
+        if(this.form.tipoDocumento == 'Doutorado'){
+          this.output += "(Doutorado) - ";
         }
-        if(this.form.ano != ''){
-          this.output +=  this.form.ano+". ";
+        if(this.form.tipoDocumento == 'Mestrado'){
+          this.output += "(Mestrado) - ";
         }
-        if(this.form.codigo == 1){
-          if(this.form.isbn != ''){
-            this.output += "ISBN: " + this.form.isbn+". ";
+        if(this.form.tipoDocumento == 'Especialização'){
+          this.output += "(Especialização) - ";
         }
-      }
-        if(this.form.codigo == 2){
-          if(this.form.issn != ''){
-            this.output += "ISSN: " + this.form.issn+". ";
-          }
+        if(this.form.tipoDocumento == 'Graduação'){
+          this.output += "(Graduação) - ";
         }
-        if(this.form.codigo == 3){
-          if(this.form.issn != ''){
-            this.output += "DOI: " + this.form.issn+". ";
-          }
+        if(this.form.curso != ''){
+          this.output +=  this.form.curso+". ";
         }
+        if(this.form.departamento != ''){
+          this.output +=  this.form.departamento +". ";
+        }
+        if(this.form.siglaInst != ''){
+          this.output +=  this.form.siglaInst+". ";
+        }
+        if(this.form.inst != ''){
+          this.output +=  this.form.inst+". ";
+        }
+        if(this.form.cidade != ''){
+          this.output +=  this.form.cidade+". ";
+        }
+        if(this.form.anoDeposito != ''){
+          this.output +=  this.form.anoDeposito+". ";
+        }
+        if(this.form.numeroCap != ''){
+          this.output += "Cap. " + this.form.numeroCap+". ";
+        }
+
         if(this.form.link != ''){
           this.output += "Disponível em: <" + this.form.link+">. ";
         }
+        if(this.form.acesso != ''){
+          this.output += "Acesso em: " + this.form.acesso+". ";
+        }
         console.log(this.output);
-      },
-
-      dadosCap(){
-        //this.output = this.form.autorCap[0] + " .et al. ";
-
-        if(this.form.tipoCap == 'juridica'){
-          if(this.form.autorCap > 3){
-          if(this.form.autoralCap != 1){
-            this.output = this.form.autorCap[0] + " .et al. ";
-          }else{
-            this.output = this.form.autorCap[0] + " .et al. ";
-          }
-            //this.output += "(" + this.toTitleCase(this.form.paisCap) + "). " + this.form.vinculoCap + " ";
-          }else {
-            this.output += ".et al. " + "(" + this.toTitleCase(this.form.paisCap) + "). " + this.form.vinculoCap + " ";
-          }
-        }
-
-        if(this.form.tipoCap == 'governamental'){
-          if(this.form.autorCap > 3){
-            if(this.form.autoralCap != 1){
-              this.output = this.form.paisCap.toUpperCase() + ". " + this.form.autorCap[0] + " .et al. ";
-              console.log("teste1");
-            }else{
-              this.output = this.form.paisCap.toUpperCase() + ". " + this.form.autorCap[0] + " .et al. ";
-              console.log("teste2");
-            }
-              this.output += this.form.vinculoCap + " ";
-              console.log("teste3");
-          }else{
-            //this.output = this.form.paisCap.toUpperCase() + ". ";
-            console.log("teste4");
-          }
-          }
-
-
-        if(this.form.tipoCap == 'fisica'){
-          if(this.form.autorCap > 3){
-            if(this.form.autoralCap != 1){
-              this.output = this.form.autorCap[0] + " .et al. " + "(" + this.form.autoralCap + "). ";
-            }else{
-              this.output = this.form.autorCap[0] + " .et al. ";
-            }
-          }else {
-            this.output += ".et al. ";
-          }
-
-        }
-
-        if(this.form.subtituloCap == ''){
-          if(this.form.autoralCap == 1){
-            this.output += this.form.tituloCap;
-          }else{
-          this.output += "(" + this.form.autoralCap + "). " + this.form.tituloCap;
-        }
-        }else{
-          if(this.form.autoralCap == 1){
-            console.log("aqui");
-            this.output += this.form.tituloCap + ": " + this.form.subtituloCap + ". ";
-          }else{
-            this.output += "(" + this.form.autoralCap + "). " + this.form.tituloCap + ": " + this.form.subtituloCap + ". ";
-            console.log("ou aqui");
-          }
-
-        }
       },
 
       toTitleCase(str){
@@ -403,26 +401,6 @@ export default {
         console.log(this.form.autorCap);
       },
 
-      qntAutor(){
-        this.output = this.form.autorCap[0] + "; ";
-        for (var i = 1; i < this.form.autorCap.length-1; i++) {
-          this.output += this.form.autorCap[i] + "; ";
-        }
-        if(this.form.autorCap.length > 1 && this.form.autorCap.length <= 3){
-          console.log("aparece nao");
-          let lastElement = this.form.autorCap[this.form.autorCap.length-1];
-          this.output += lastElement + ". ";
-          //this.dadosCap();
-        }else{
-          //this.dadosCap();
-        }
-        if(this.form.tipoCap == 'governamental'){
-          this.output = this.form.paisCap.toUpperCase() + ". " + this.output;
-          console.log(this.output);
-          //this.dadosCap();
-        }
-      },
-
       qntNomes(){
         this.output += this.form.name[0] + "; ";
         for (var i = 1; i < this.form.name.length-1; i++) {
@@ -434,6 +412,7 @@ export default {
           this.output += lastElementName + ". ";
           //this.chamarDados();
         }
+        this.output += ".et al. ";
       }
   }
   }

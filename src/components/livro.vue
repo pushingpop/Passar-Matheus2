@@ -25,7 +25,10 @@
 
     <div class="control">
       <label class="req">Autor(es): </label>
-      <input v-model="form.name" class="input" id="autor1" type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">
+      <div v-for = "(nome, index) in form.name">
+        <input v-model="form.name[index]" class="input" id="autor1" type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">
+        <button @click="deleteFind(index)">Deletar</button>
+      </div>
       <button type="button" name="Adicionar" v-on:click="changeQnt()">Adicionar</button>
     </div>
 
@@ -121,7 +124,7 @@ export default {
         isbn: '123456789',
         tipoAutor: 'fisica',
         pais: 'Brasil',
-        name: ['Raphael','Teste1','Teste2','Teste3'],
+        name: [''],
         respAutoral: '1',
         cidade: 'Maceió',
         vinculo: 'Associação Sururu Vale',
@@ -156,7 +159,14 @@ export default {
     },
 
     checkForm(e){
-      if(this.form.name && this.form.titulo && this.form.cidade && this.form.editora && this.form.ano){
+      for (var i = 0; i < this.form.name.length; i++) {
+        if(this.form.name[i] == '' && this.form.name.length > 1){
+          alert("Favor preencher todos os campos de autores");
+          return;
+        }
+      }
+      
+      if(this.form.name != '' && this.form.name != 'undefinde' && this.form.titulo && this.form.cidade && this.form.editora && this.form.ano){
         if(this.form.link){
           if(this.form.acesso){
             this.envio();
@@ -171,6 +181,7 @@ export default {
 
       }
       if(!this.form.name) alert("Favor preencher o nome do Autor:")
+      if(this.form.name == '') alert("Favor preencher o nome do Autor:")
       if(!this.form.titulo) alert("Favor preencher o Titulo:")
       if(!this.form.cidade) alert("Favor preencher a Cidade:")
       if(!this.form.editora) alert("Favor preencher a Editora:")
@@ -187,12 +198,23 @@ export default {
 
       if(this.form.tipoAutor == 'fisica'){
         if(this.form.name.length > 3){
-          this.output = this.form.name[0] + " .et al. ";
+          this.output = '';
+          this.output += this.form.name[0] + " .et al. ";
           if(this.form.respAutoral != 1){
             this.output += "(" + this.form.respAutoral+"). ";
           }
-        }
+          //this.output = this.form.autorCap + " " + " .et al. " + this.form.autoralCap + " " + this.form.tituloCap + " " + this.form.name[0] + " .et al. ";
           this.chamarDados();
+        }else {
+          this.output = '';
+          this.qntNomes();
+          this.output += ".et al. "
+          if(this.form.respAutoral != 1){
+            this.output += "(" + this.form.respAutoral+"). ";
+          }
+          this.chamarDados();
+        }
+
       }
 
       if(this.form.tipoAutor == "juridica"){
@@ -220,11 +242,13 @@ export default {
 
     changeQnt(){
       this.autorID++;
+      /*
       let tempID = this.autorID - 1;
       tempID.toString();
       console.log(tempID);
       document.getElementById('autor'+tempID).insertAdjacentHTML('afterend', '<br><input v-model="form.name" class="input" id="autor'+ this.autorID+ '"' + 'type="text" placeholder="Ex: Paulo da Silva, Maria de Lurdes">');
-
+      */
+      this.form.name.push("");
     },
       chamarDados(){
         if(this.form.subtitulo != ''){
@@ -278,6 +302,31 @@ export default {
 
       toTitleCase(str){
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      },
+
+      deleteFind(index) {
+        console.log(index);
+        this.form.name.splice(index, 1);
+        console.log(this.form.autorCap);
+      },
+
+      qntNomes(){
+        this.output += this.form.name[0] + "; ";
+        for (var i = 1; i < this.form.name.length-1; i++) {
+          this.output += this.form.name[i] + "; ";
+        }
+        if(this.form.name.length > 1 && this.form.name.length <= 3){
+          console.log("aparece");
+          let lastElementName = this.form.name[this.form.name.length-1];
+          this.output += lastElementName + ". ";
+          //this.chamarDados();
+        }else{
+          //this.chamarDados();
+        }
+        if(this.form.tipoAutor == 'governamental'){
+          //this.output += this.form.pais.toUpperCase() + ". " + this.output;
+          //this.chamarDados();
+        }
       }
   }
   }

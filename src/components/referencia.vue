@@ -23,6 +23,22 @@
     <section id="form2" class="forms">
       <capitulo></capitulo>
     </section>
+
+    <section id="form8" class="forms">
+      <artigo></artigo>
+    </section>
+
+    <section id="form4" class="forms">
+      <tcc></tcc>
+    </section>
+
+    <section id="form7" class="forms">
+      <norma></norma>
+    </section>
+
+    <section id="form5" class="forms">
+      <anais></anais>
+    </section>
   </div>
   <!-- Referencia: autor. + titulo:(negrito) + : subtitulo(se houver) + cidade +  -->
   <!--
@@ -46,6 +62,10 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import Livro from './livro.vue'
 import Capitulo from './capitulo.vue'
+import Artigo from './artigo.vue'
+import Tcc from './tcc.vue'
+import Norma from './norma.vue'
+import Anais from './anais.vue'
 export default {
   name: 'referencia',
   data () {
@@ -75,7 +95,7 @@ export default {
     }
   },
   components: {
-    Livro, Capitulo
+    Livro, Capitulo, Artigo, Tcc, Norma, Anais
   },
   mounted(){
 
